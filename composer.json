@@ -1,0 +1,26 @@
+{
+    "name"       : "doppy/util-bundle",
+    "type"       : "symfony-bundle",
+    "description": "Bundle with some simple useful tools",
+    "keywords"   : [
+        "util",
+        "utils",
+        "symfony"
+    ],
+    "license"    : "MIT",
+    "authors"    : [
+        {
+            "name" : "Daan van den Berg",
+            "email": "zawadi@doppy.nl"
+        }
+    ],
+    "require"    : {
+        "php"                     : ">=5.5",
+        "symfony/symfony"         : ">=2.8"
+    },
+    "autoload"   : {
+        "psr-4": {
+            "Doppy\\UtilBundle\\": ""
+        }
+    }
+}
