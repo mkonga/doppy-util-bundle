@@ -45,7 +45,7 @@ class YourCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
-        $this->processTaggedServices($container, 'doppy_util.your_tag_and_service', 'addMethod');
+        $this->processTaggedServices($container, 'doppy_util.your_tag_and_service', 'addMethod', false);
     }
 }
 ````
@@ -53,6 +53,10 @@ The service named `doppy_util.your_tag_and_service` will be fetched from the con
 and all other services tagged with the same name will be passed into the main service using the method `addMethod`.
 
 Please note that the main service and the tag used must have the same name.
-Use the attribute `priority` in the tag definition to configure the order in wich to pass the tagged services.
+
+The following additional attributes on the tag can be used:
+
+* `priority`: to determine the order (lowest to highest).
+* `alias`: A second parameter is passed to the method which either contains this value, or the name of the service that was tagged.
 
 Optionally, you can pass a fourth boolean parameter to make the tagged services lazy automatically.
