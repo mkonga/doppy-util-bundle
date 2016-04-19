@@ -14,7 +14,14 @@ trait TaggedServicesTrait
      */
     private $_optionsResolver = null;
 
-    protected function processTaggedServices(ContainerBuilder $container, $name, $method, $forceLazy = false)
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $name      the name of the tag+service
+     * @param string           $method    the method on the service to call
+     * @param bool             $forceLazy force all tagged services to lazy
+     * @param bool             $useName   set to true to pass the name of the tagged service, instead of the service itself.
+     */
+    protected function processTaggedServices(ContainerBuilder $container, $name, $method, $forceLazy = false, $useName = false)
     {
         // do nothing when the service is not found
         if (!$container->has($name)) {
@@ -59,11 +66,16 @@ trait TaggedServicesTrait
 
         // now add them in requested order
         foreach ($list as $taggedService) {
+            if ($useName) {
+                $passService = $taggedService['id'];
+            } else {
+                $passService = new Reference($taggedService['id']);
+            }
             // add the MenuBuilder to our repository
             $serviceDefinition->addMethodCall(
                 $method,
                 array(
-                    new Reference($taggedService['id']),
+                    $passService,
                     $taggedService['attributes']['alias']
                 )
             );
