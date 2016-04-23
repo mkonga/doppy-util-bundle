@@ -7,6 +7,9 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @deprecated
+ */
 trait TaggedServicesTrait
 {
     /**
@@ -20,6 +23,8 @@ trait TaggedServicesTrait
      * @param string           $method    the method on the service to call
      * @param bool             $forceLazy force all tagged services to lazy
      * @param bool             $useName   set to true to pass the name of the tagged service, instead of the service itself.
+     *
+     * @deprecated
      */
     protected function processTaggedServices(ContainerBuilder $container, $name, $method, $forceLazy = false, $useName = false)
     {
@@ -114,6 +119,8 @@ trait TaggedServicesTrait
      * Configures the OptionsResolver used for the attributes
      *
      * @param OptionsResolver $optionsResolver
+     *
+     * @deprecated
      */
     protected function configureOptionsResolver(OptionsResolver $optionsResolver)
     {
