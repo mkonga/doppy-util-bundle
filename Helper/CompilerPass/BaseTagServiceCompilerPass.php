@@ -58,7 +58,7 @@ abstract class BaseTagServiceCompilerPass implements CompilerPassInterface
 
         // sort what we got
         usort($list, function ($left, $right) {
-            return $left['priority'] - $right['priority'];
+            return $right['priority'] - $left['priority'];
         });
 
         // now make some calls
