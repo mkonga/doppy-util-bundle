@@ -8,3 +8,6 @@ services:
         class: Doppy\UtilBundle\Subscriber\TempFileCleanupSubscriber
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+    doppy_util.null_stopwatch:
+        class: Doppy\UtilBundle\Stopwatch\NullStopwatch
