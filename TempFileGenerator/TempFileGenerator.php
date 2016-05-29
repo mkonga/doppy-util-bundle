@@ -3,23 +3,23 @@
 namespace Doppy\UtilBundle\TempFileGenerator;
 
 use Doppy\UtilBundle\Exception\TempFileGenerationException;
-use Doppy\UtilBundle\Subscriber\TempFileCleanupSubscriber;
+use Doppy\UtilBundle\Listener\TempFileCleanupListener;
 
 class TempFileGenerator
 {
     /**
-     * @var TempFileCleanupSubscriber
+     * @var TempFileCleanupListener
      */
-    protected $cleanupSubscriber;
+    protected $cleanupListener;
 
     /**
      * InternetLocator constructor.
      *
-     * @param TempFileCleanupSubscriber $cleanupSubscriber
+     * @param TempFileCleanupListener $cleanupListener
      */
-    public function __construct(TempFileCleanupSubscriber $cleanupSubscriber)
+    public function __construct(TempFileCleanupListener $cleanupListener)
     {
-        $this->cleanupSubscriber = $cleanupSubscriber;
+        $this->cleanupListener = $cleanupListener;
     }
 
     /**
@@ -42,7 +42,7 @@ class TempFileGenerator
 
         // maybe remove it on terminate
         if ($removeOnShutDown) {
-            $this->cleanupSubscriber->addFile($tempFile);
+            $this->cleanupListener->addFile($tempFile);
         }
 
         // return result

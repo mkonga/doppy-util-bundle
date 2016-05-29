@@ -1,28 +1,18 @@
 <?php
 
-namespace Doppy\UtilBundle\Subscriber;
+namespace Doppy\UtilBundle\Listener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class TempFileCleanupSubscriber implements EventSubscriberInterface
+class TempFileCleanupListener
 {
     /**
      * @var string[]
      */
     protected $files = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            KernelEvents::TERMINATE => 'onKernelTerminate'
-        );
-    }
 
     /**
      * Adds a temporary file to be deleted at the end of the request

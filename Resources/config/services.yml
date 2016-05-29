@@ -2,10 +2,10 @@ services:
     doppy_util.temp_file_generator:
         class: Doppy\UtilBundle\TempFileGenerator\TempFileGenerator
         arguments:
-            - "@doppy_util.temp_file_cleanup_subscriber"
+            - "@doppy_util.temp_file_cleanup_listener"
             
-    doppy_util.temp_file_cleanup_subscriber:
-        class: Doppy\UtilBundle\Subscriber\TempFileCleanupSubscriber
+    doppy_util.temp_file_cleanup_listener:
+        class: Doppy\UtilBundle\Listener\TempFileCleanupListener
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
