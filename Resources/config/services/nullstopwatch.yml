@@ -1,0 +1,3 @@
+services:
+    doppy_util.null_stopwatch:
+        class: Doppy\UtilBundle\Stopwatch\NullStopwatch

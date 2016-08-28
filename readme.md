@@ -11,7 +11,24 @@ Generate a filename in the configured temp dir:
 $fileGenerator = $this->getContainer()->get('doppy_util.temp_file_generator');
 $tempFileName = $fileGenerator->getTempFileName('think_of_something');
 ````
-The resulting file will be automatically removed at the end of the request when symfony is "shutting down".
+
+You can specifify a path in the configuration where to create the tempfiles, like shown below.
+When you don't configure this, the result of sys_get_temp_dir is used.
+
+````
+doppy_util:
+    temp_file:
+        path: /your/path/
+````
+
+Using the default configuration, generated tempfiles will be removed on the terminate event. You can disable this using the configuration below.
+You can also pass false as a second parameter to the generator to prevent that file from being cleaned up.
+ 
+````
+doppy_util:
+    temp_file:
+        cleanup_on_terminate: false
+````
 
 ## Prepend config helper
 
@@ -31,32 +48,56 @@ class DoppyUtilExtension extends Extension implements PrependExtensionInterface
 Be careful what you add in there, as it is hard to remove it via the application config.
 It is best to only use it for things you know you allways need.
 
-## Tagged Services helper
+## Tagged Services BaseClass
 
 When you want to tag services it can be a bit of work to create a CompilerPass to get this working correctly.
-As this is repetitive for simple cases, this trait might save you some time.
+As this is repetitive for simple cases, this base class might come in useful.
 
 Create a CompilerPass class like this:
 
 ````
-class YourCompilerPass implements CompilerPassInterface
+class YourCompilerPass extends BaseTagServiceCompilerPass
 {
-    use TaggedServicesTrait;
-
-    public function process(ContainerBuilder $container)
+    protected function handleTag(
+        ContainerBuilder $containerBuilder,
+        Definition $serviceDefinition,
+        Reference $taggedServiceReference,
+        $attributes
+    )
     {
-        $this->processTaggedServices($container, 'doppy_util.your_tag_and_service', 'addMethod', false);
+        $serviceDefinition->addMethodCall('someMethod', array($taggedServiceReference));
+    }
+
+    protected function getService(ContainerBuilder $containerBuilder)
+    {
+        // return the main service you are tagging for
+        return $containerBuilder->findDefinition('your-service-name');
+    }
+
+    protected function getTaggedServices(ContainerBuilder $containerBuilder)
+    {
+        // return all services that you need to do something with. usually with a specific tag
+        return $containerBuilder->findTaggedServiceIds('your-tag-name');
     }
 }
 ````
-The service named `doppy_util.your_tag_and_service` will be fetched from the container,
-and all other services tagged with the same name will be passed into the main service using the method `addMethod`.
 
-Please note that the main service and the tag used must have the same name.
+If you add an attribute "priority" to your tagged services, they will be automatically sorted.
 
-The following additional attributes on the tag can be used:
+An OptionsResolver is used to resolve all the attributes. This means you are restricted to what is configured.
+You can add additional configuration by overriding the `configureOptionsResolver` method. See the class for more information.
 
-* `priority`: to determine the order (lowest to highest).
-* `alias`: A second parameter is passed to the method which either contains this value, or the name of the service that was tagged.
+## NullStopwatch
 
-Optionally, you can pass a fourth boolean parameter to make the tagged services lazy automatically.
+When using a stopwatch in development, it can be an hassle to write all the if-statements around the calls to the stopwatch.
+
+Add the following configuration, and a service `debug.stopwatch` will always be available.
+When the debug version from symfony is not configured, a dummy implementation is loaded that simply does nothing.
+
+````
+doppy_util:
+    nullstopwatch: true
+````
+
+Keep in mind that you may get some weird results when you retrieve information from the Stopwatch, as the NullStopwatch has to make something up.
+When enabled, you can always use the service `doppy_util.nullstopwatch`, to get the null version, even in development.

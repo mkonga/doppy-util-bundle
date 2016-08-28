@@ -9,7 +9,9 @@ class NullStopwatchCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('debug.stopwatch')) {
+        if ((!$container->hasDefinition('debug.stopwatch')) &&
+            ($container->getParameter('doppy_util.nullstopwatch'))
+        ) {
             $container->setAlias('debug.stopwatch', 'doppy_util.null_stopwatch');
         }
     }

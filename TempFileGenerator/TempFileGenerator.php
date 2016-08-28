@@ -17,8 +17,9 @@ class TempFileGenerator
      *
      * @param TempFileCleanupListener $cleanupListener
      */
-    public function __construct(TempFileCleanupListener $cleanupListener)
+    public function __construct($path, TempFileCleanupListener $cleanupListener = null)
     {
+        $this->path            = $path;
         $this->cleanupListener = $cleanupListener;
     }
 
@@ -33,7 +34,7 @@ class TempFileGenerator
     public function getTempFileName($prefix = '', $removeOnShutDown = true)
     {
         // attempt to generate tempfile
-        $tempFile = tempnam(sys_get_temp_dir(), $prefix);
+        $tempFile = tempnam($this->getTempDir(), $prefix);
 
         // check if that worked
         if ($tempFile === false) {
@@ -41,11 +42,22 @@ class TempFileGenerator
         }
 
         // maybe remove it on terminate
-        if ($removeOnShutDown) {
+        if (($removeOnShutDown) && ($this->cleanupListener)) {
             $this->cleanupListener->addFile($tempFile);
         }
 
         // return result
         return $tempFile;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTempDir()
+    {
+        if ($this->path === false) {
+            $this->path = sys_get_temp_dir();
+        }
+        return $this->path;
     }
 }
