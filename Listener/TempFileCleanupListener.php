@@ -2,8 +2,6 @@
 
 namespace Doppy\UtilBundle\Listener;
 
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-
 class TempFileCleanupListener
 {
     /**

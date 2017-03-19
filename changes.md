@@ -1,3 +1,7 @@
+# 2.0.0
+
+* Removed deprecated trait, you can use the BaseTagServiceCompilerPass as a more simple solution to implement.
+
 # 1.4.0
 
 * Removed user specific entries from .gitignore
