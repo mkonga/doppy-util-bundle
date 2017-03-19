@@ -23,10 +23,8 @@ class TempFileCleanupListener
 
     /**
      * Removes all temp files at the end of the request
-     *
-     * @param PostResponseEvent $event
      */
-    public function onKernelTerminate(PostResponseEvent $event)
+    public function onKernelTerminate()
     {
         if (count($this->files) > 0) {
             $this->removeFiles($this->files);
